@@ -2,6 +2,8 @@ package presentacion;
 
 import processing.core.PApplet;
 import controlP5.*;
+import javax.swing.ImageIcon;
+import processing.core.PImage;
 
 public class SimulacionCore extends PApplet {
 
@@ -10,14 +12,21 @@ public class SimulacionCore extends PApplet {
     int c1, c2;
     float n, n1;
     RadioButton r;
+    private PImage iconCursor;
+    int mapa[][] = new int[25][20];
 
     public void setup() {
-        size(1000, 650);
+        size(1200, 640);
         noStroke();
         cp5 = new ControlP5(this);
+        ImageIcon titlebaricon = new ImageIcon(loadBytes("/imagenes/iconClock.png"));
+        frame.setIconImage(titlebaricon.getImage());
+        frame.setTitle("TimePower");
+        iconCursor = loadImage("/imagenes/cursor.png");
+        cursor(iconCursor);
 
         r = cp5.addRadioButton("radioButton")
-                .setPosition(50, 100)
+                .setPosition(30, 100)
                 .setSize(40, 20)
                 .setColorForeground(color(120))
                 .setColorActive(color(255))
@@ -37,27 +46,26 @@ public class SimulacionCore extends PApplet {
             t.captionLabel().style().backgroundWidth = 45;
             t.captionLabel().style().backgroundHeight = 13;
         }
-        
+
         cp5.addButton("Iniciar")
                 .setValue(0)
-                .setPosition(100, 300)
+                .setPosition(10, 300)
                 .setSize(100, 19);
 
         cp5.addButton("Detener")
                 .setValue(100)
-                .setPosition(100, 320)
+                .setPosition(10, 320)
                 .setSize(100, 19);
 
         cp5.addButton("Defecto")
-                .setPosition(100, 340)
+                .setPosition(10, 340)
                 .setSize(100, 19)
                 .setValue(0);
     }
 
     public void draw() {
-        background(myColor);
-        myColor = lerpColor(c1, c2, n);
-        n += (1 - n) * 0.1;
+        background(250);
+        inicializarMapa();
     }
 
     public void Iniciar(int theValue) {
@@ -103,5 +111,26 @@ public class SimulacionCore extends PApplet {
 
     public void radioButton(int a) {
         println("a radio Button event: " + a);
+    }
+
+    public void inicializarMapa() {
+        fill(lerpColor(color(0, 150, 150), color(0, 150, 150), 80));
+        rect(0, 0, 160, 650);
+        stroke(200);
+        for (int i = 200; i < 1200; i++) {
+            if (i % 40 == 0) {
+                line(i, 0, i, 650);
+            }
+        }
+        for (int i = 200; i < 1200; i++) {
+            if (i % 40 == 0) {
+                line(i, 0, i, 650);
+            }
+        }
+        for (int j = 0; j < 640; j++) {
+            if (j % 32 == 0) {
+                line(160, j, 1200, j);
+            }
+        }
     }
 }
