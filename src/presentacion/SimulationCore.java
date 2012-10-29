@@ -1,35 +1,45 @@
 package presentacion;
 
+import Negocio.BusinessSimulation;
+import Negocio.Transport;
 import processing.core.PApplet;
 import controlP5.*;
 import javax.swing.ImageIcon;
 import processing.core.PImage;
 
-public class SimulacionCore extends PApplet {
+public class SimulationCore extends PApplet {
 
     ControlP5 cp5;
     private PImage iconCursor;
-    private int mapa[][] = new int[25][20];
     private Accordion accordion;
     private int c = color(0, 160, 100);
-    private PImage TTipo1;
-    private PImage TTipo2;
-    private PImage TTipo3;
-    private PImage TTipo4;
-    private String TIPO_TRANSPORTE = "tipo1";
+    private PImage TType1;
+    private PImage TType2;
+    private PImage TType3;
+    private PImage TType4;
+    private String TYPE_TRANSPORT;
+    private int WindowWidth = 1200;
+    private int WindowHeight = 630;
+    private int ModuleMappedWidth = 42;
+    private int ModuleMappedHeight = 35;
+    private int PanelWidth = 168;
+    private int PanelHeight = 630;
+    private int ClearanceWidth = 24;//La holgura surge del numero de columnas
+    private int ClearanceHeight = 18;//La holgura surge del numero de filas
+    private boolean pause = true;
 
     public void setup() {
-        size(1200, 640);
+        size(WindowWidth, WindowHeight);
         smooth();
         noStroke();
 
         cp5 = new ControlP5(this);
 
-        cargaImagenes();
-        crearOpciones();
-        cambiarIcono();
-        cambiarCursor();
-        crearBotones();
+        loadGraphics();
+        optionCreate();
+        changeIcon();
+        changePointer();
+        buttonsCreate();
     }
 
     public void draw() {
@@ -39,14 +49,19 @@ public class SimulacionCore extends PApplet {
 
         float s1 = cp5.getController("hello").getValue();
         ellipse(850, 300, s1, s1);
+        text("Este es el simulador de envío", 500, 200, 500, 500);
 
         float s2 = cp5.getController("world").getValue();
         ellipse(450, 300, s2, s2);
-        pintarTransporte((int) Math.round((Math.random()*25))  * 40 + 160, (int) Math.round((Math.random()*20))  * 32);
+
+        //El parametro que recibe nextStep indica el punto de servicio al que se hace referencia
+        if (pause == false && BusinessSimulation.getInstance().nextStep(0)) {
+            drawTransport();
+        }
 
     }
 
-    void crearBotones() {
+    void buttonsCreate() {
         cp5.addButton("Iniciar")
                 .setValue(0)
                 .setPosition(10, 550)
@@ -63,25 +78,25 @@ public class SimulacionCore extends PApplet {
                 .setValue(0);
     }
 
-    void cambiarIcono() {
+    void changeIcon() {
         ImageIcon titlebaricon = new ImageIcon(loadBytes("/imagenes/iconClock.png"));
         frame.setIconImage(titlebaricon.getImage());
         frame.setTitle("TimePower");
     }
 
-    void cambiarCursor() {
+    void changePointer() {
         cursor(iconCursor);
     }
 
-    void cargaImagenes() {
+    void loadGraphics() {
         iconCursor = loadImage("/imagenes/cursor.png");
-        TTipo1 = loadImage("/imagenes/moto.png");
-        TTipo2 = loadImage("/imagenes/amarillo.png");
-        TTipo3 = loadImage("/imagenes/verde.png");
-        TTipo4 = loadImage("/imagenes/rojo.png");
+        TType1 = loadImage("/imagenes/moto.png");
+        TType2 = loadImage("/imagenes/amarillo.png");
+        TType3 = loadImage("/imagenes/verde.png");
+        TType4 = loadImage("/imagenes/rojo.png");
     }
 
-    void crearOpciones() {
+    void optionCreate() {
         // group number 1, contains 2 bangs
         Group g1 = cp5.addGroup("myGroup1")
                 .setBackgroundColor(color(0, 64))
@@ -195,15 +210,15 @@ public class SimulacionCore extends PApplet {
     }
 
     public void Iniciar(int theValue) {
-        println("a button event from colorA: " + theValue);
+        pause = false;
     }
 
     public void Detener(int theValue) {
-        println("a button event from colorB: " + theValue);
+        BusinessSimulation.getInstance().reset();
+        pause = true;
     }
 
     public void Defecto(int theValue) {
-        println("a button event from colorC: " + theValue);
     }
 
     public void radio(int theC) {
@@ -238,39 +253,55 @@ public class SimulacionCore extends PApplet {
     public void inicializarMapa() {
 
         fill(lerpColor(color(0, 150, 150), color(0, 150, 150), 80));
-        rect(0, 0, 160, 650);
+        rect(0, 0, PanelWidth, PanelHeight);
         stroke(200);
 
-        for (int i = 0; i < 25; i++) {
-            for (int j = 0; j < 20; j++) {
-                mapa[i][j] = 0;
+        for (int i = PanelWidth; i <= WindowWidth - ClearanceWidth; i++) {
+            if (i % ModuleMappedWidth == 0) {
+                line(i, 0, i, WindowHeight);
             }
         }
-        for (int i = 200; i < 1200; i++) {
-            if (i % 40 == 0) {
-                line(i, 0, i, 650);
-            }
-        }
-        for (int j = 0; j < 640; j++) {
-            if (j % 32 == 0) {
-                line(160, j, 1200, j);
+        for (int j = 0; j <= WindowHeight; j++) {
+            if (j % ModuleMappedHeight == 0) {
+                line(PanelWidth, j, WindowWidth - ClearanceWidth, j);
             }
         }
     }
 
-    public void pintarTransporte(int coordX, int coordY) {
-        switch (TIPO_TRANSPORTE) {
+    public void drawTransport() {
+        for (Transport u : BusinessSimulation.getInstance().getTransports()) {
+            switch (u.getType()) {
+                case 1:
+                    TYPE_TRANSPORT = "tipo1";
+                    break;
+                case 2:
+                    TYPE_TRANSPORT = "tipo2";
+                    break;
+                case 3:
+                    TYPE_TRANSPORT = "tipo3";
+                    break;
+                case 4:
+                    TYPE_TRANSPORT = "tipo4";
+                    break;
+            }
+            loadTransportGraphic((int) Math.round((Math.random() * ClearanceWidth)) * ModuleMappedWidth + PanelWidth, (int) Math.round((Math.random() * ClearanceHeight)) * ModuleMappedHeight);
+        }
+
+    }
+
+    public void loadTransportGraphic(int coordX, int coordY) {
+        switch (TYPE_TRANSPORT) {
             case "tipo1":
-                image(TTipo1, coordX, coordY, 45, 45);
+                image(TType1, coordX, coordY, 45, 45);
                 break;
             case "tipo2":
-                image(TTipo2, coordX, coordY, 45, 45);
+                image(TType2, coordX, coordY, 45, 45);
                 break;
             case "tipo3":
-                image(TTipo3, coordX, coordY, 45, 45);
+                image(TType3, coordX, coordY, 45, 45);
                 break;
             case "tipo4":
-                image(TTipo4, coordX, coordY, 45, 45);
+                image(TType4, coordX, coordY, 45, 45);
                 break;
         }
     }
