@@ -5,6 +5,7 @@ public class ServicePoint {
     private int posX;
     private int posY;
     private int packsInStack;
+    private int type;
 
     //Contructor
     public ServicePoint() {
@@ -41,5 +42,13 @@ public class ServicePoint {
     //Return Y coordinate
     public int getPosY() {
         return posY;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
