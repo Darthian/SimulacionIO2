@@ -13,13 +13,13 @@ public class Transport {
     private ArrayList roadY = new ArrayList();
 
     //Constructor
-    public Transport(int newPosX, int newPosY, int newRound, int newType, Obstruction[][] defenseMap, int destPosX, int destPosY, int newCapacity) {
+    public Transport(int newPosX, int newPosY, int newRound, int newType, Obstruction[][] obstructionMap, int destPosX, int destPosY, int newCapacity) {
         posX = newPosX;
         posY = newPosY;
         round = newRound;
         type = newType;
         capacity = newCapacity;
-        setRoad(defenseMap, destPosX, destPosY);
+        setRoad(obstructionMap, destPosX, destPosY);
     }
 
     //Return actual X position
@@ -43,13 +43,13 @@ public class Transport {
     }
 
     //Move unit according to road
-    public boolean move(Transport[][] enemiesMap) {
+    public boolean move(Transport[][] TransportMap) {
         if (!roadX.isEmpty()) {
             int tempPosX = (int) roadX.get(0);
             int tempPosY = (int) roadY.get(0);
-            if (enemiesMap[tempPosY][tempPosX] == null) {
-                enemiesMap[tempPosY][tempPosY] = this;
-                enemiesMap[posY][posY] = null;
+            if (TransportMap[tempPosY][tempPosX] == null) {
+                TransportMap[tempPosY][tempPosY] = this;
+                TransportMap[posY][posY] = null;
                 posX = (int) roadX.remove(0);
                 posY = (int) roadY.remove(0);
             }
@@ -60,7 +60,7 @@ public class Transport {
     }
 
     //Set road to move
-    public void setRoad(Obstruction[][] defenseMap, int destPosX, int destPosY) {
+    public void setRoad(Obstruction[][] obstructionMap, int destPosX, int destPosY) {
         roadX = new ArrayList();
         roadY = new ArrayList();
         Object[][] roadMap = new Object[18][24];
@@ -81,22 +81,22 @@ public class Transport {
             if (tempPosX == destPosX && tempPosY == destPosY) {
                 find = true;
             } else {
-                if (tempPosX < 23 && defenseMap[tempPosY][tempPosX + 1] == null && roadMap[tempPosY][tempPosX + 1] == null) {
+                if (tempPosX < 23 && obstructionMap[tempPosY][tempPosX + 1] == null && roadMap[tempPosY][tempPosX + 1] == null) {
                     arrayPosX.add(tempPosX + 1);
                     arrayPosY.add(tempPosY);
                     roadMap[tempPosY][tempPosX + 1] = cont;
                 }
-                if (tempPosX > 0 && defenseMap[tempPosY][tempPosX - 1] == null && roadMap[tempPosY][tempPosX - 1] == null) {
+                if (tempPosX > 0 && obstructionMap[tempPosY][tempPosX - 1] == null && roadMap[tempPosY][tempPosX - 1] == null) {
                     arrayPosX.add(tempPosX - 1);
                     arrayPosY.add(tempPosY);
                     roadMap[tempPosY][tempPosX - 1] = cont;
                 }
-                if (tempPosY < 17 && defenseMap[tempPosY + 1][tempPosX] == null && roadMap[tempPosY + 1][tempPosX] == null) {
+                if (tempPosY < 17 && obstructionMap[tempPosY + 1][tempPosX] == null && roadMap[tempPosY + 1][tempPosX] == null) {
                     arrayPosX.add(tempPosX);
                     arrayPosY.add(tempPosY + 1);
                     roadMap[tempPosY + 1][tempPosX] = cont;
                 }
-                if (tempPosY > 0 && defenseMap[tempPosY - 1][tempPosX] == null && roadMap[tempPosY - 1][tempPosX] == null) {
+                if (tempPosY > 0 && obstructionMap[tempPosY - 1][tempPosX] == null && roadMap[tempPosY - 1][tempPosX] == null) {
                     arrayPosX.add(tempPosX);
                     arrayPosY.add(tempPosY - 1);
                     roadMap[tempPosY - 1][tempPosX] = cont;
@@ -140,8 +140,8 @@ public class Transport {
         return capacity;
     }
 
-    public boolean reachTower(ServicePoint tower) {
-        if (posX == tower.getPosX() && posY == tower.getPosY()) {
+    public boolean reachDestination(ServicePoint destination) {
+        if (posX == destination.getPosX() && posY == destination.getPosY()) {
             return true;
         }
         return false;

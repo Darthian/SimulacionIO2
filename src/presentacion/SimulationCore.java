@@ -49,13 +49,7 @@ public class SimulationCore extends PApplet {
         changeIcon();
         changePointer();
         buttonsCreate();
-        //orden de los parametros: PacksInStock, posX, posY, Type
-        BusinessSimulation.getInstance().newServicePoint(3, 5, 3, 1);
-        BusinessSimulation.getInstance().newServicePoint(9, 15, 7, 1);
-        BusinessSimulation.getInstance().newServicePoint(8, 17, 15, 1);
-        BusinessSimulation.getInstance().newServicePoint(2, 21, 2, 1);
-        BusinessSimulation.getInstance().newServicePoint(8, 3, 15, 1);
-        BusinessSimulation.getInstance().newServicePoint(7, 7, 10, 1);
+        setUpEnviroment();
     }
 
     public void draw() {
@@ -71,7 +65,7 @@ public class SimulationCore extends PApplet {
         //ellipse(450, 300, s2, s2);
 
         //El parametro que recibe nextStep indica el punto de servicio al que se hace referencia
-        if (pause == false && BusinessSimulation.getInstance().nextStep(1)) {
+        if (pause == false && !BusinessSimulation.getInstance().nextStep(1)) {
             drawTransport();
         }
         drawServicePoint();
@@ -231,15 +225,17 @@ public class SimulationCore extends PApplet {
     }
 
     public void Iniciar(int theValue) {
+        setUpEnviroment();
         pause = false;
     }
 
     public void Detener(int theValue) {
-        //BusinessSimulation.getInstance().reset();
+        BusinessSimulation.getInstance().reset();
         pause = true;
     }
 
     public void Defecto(int theValue) {
+        setUpEnviroment();
     }
 
     public void radio(int theC) {
@@ -382,5 +378,15 @@ public class SimulationCore extends PApplet {
                 image(SPType3, coordX, coordY, 40, 40);
                 break;
         }
+    }
+
+    private void setUpEnviroment() {
+        //orden de los parametros: PacksInStock, posX, posY, Type
+        BusinessSimulation.getInstance().newServicePoint(3, 5, 3, 1);
+        BusinessSimulation.getInstance().newServicePoint(9, 1, 17, 1);
+        BusinessSimulation.getInstance().newServicePoint(8, 17, 15, 1);
+        BusinessSimulation.getInstance().newServicePoint(2, 21, 2, 1);
+        BusinessSimulation.getInstance().newServicePoint(8, 18, 5, 1);
+        BusinessSimulation.getInstance().newServicePoint(7, 7, 10, 1);
     }
 }

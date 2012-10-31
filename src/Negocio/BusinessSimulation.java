@@ -173,7 +173,7 @@ public class BusinessSimulation {
     //Create enemies for actual round
     private void createTransport(int currentServicePoint) {
         if (!transportType.isEmpty()) {
-            System.out.println(transportType.get(0).toString());
+            //System.out.println(transportType.get(0).toString());
             if (newTransport(23, 0, round, Integer.parseInt(transportType.get(0).toString()), currentServicePoint)) {
                 transportType.remove(0);
             }
@@ -191,7 +191,7 @@ public class BusinessSimulation {
     //Attack tower
     private void leavePacks(int currentServicePoint) {
         for (int i = 0; i < transports.size(); i++) {
-            if (transports.get(i).reachTower(servicePoints.get(currentServicePoint))) {
+            if (transports.get(i).reachDestination(servicePoints.get(currentServicePoint))) {
                 servicePoints.get(currentServicePoint).setPacksInStack(transports.get(i).getCapacity());
                 transports.remove(i);
                 i--;
