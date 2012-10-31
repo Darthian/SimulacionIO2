@@ -25,7 +25,7 @@ public class SimulationCore extends PApplet {
     private PImage SPType2;
     private PImage SPType3;
     private String TYPE_TRANSPORT;
-    private String TYPE_OBSTRUCTION;
+    private int TYPE_OBSTRUCTION;
     private String TYPE_SERVICEPOINT;
     private int WindowWidth = 1200;
     private int WindowHeight = 630;
@@ -36,6 +36,7 @@ public class SimulationCore extends PApplet {
     private int ClearanceWidth = 24;//La holgura surge del numero de columnas
     private int ClearanceHeight = 18;//La holgura surge del numero de filas
     private boolean pause = true;
+    private boolean flag = true;
 
     public void setup() {
         size(WindowWidth, WindowHeight);
@@ -69,6 +70,7 @@ public class SimulationCore extends PApplet {
             drawTransport();
         }
         drawServicePoint();
+        drawObstruction();
     }
 
     void buttonsCreate() {
@@ -104,8 +106,8 @@ public class SimulationCore extends PApplet {
         TType2 = loadImage("/imagenes/amarillo.png");
         TType3 = loadImage("/imagenes/verde.png");
         TType4 = loadImage("/imagenes/rojo.png");
-        OType1 = loadImage("/imagenes/rojo.png");
-        OType2 = loadImage("/imagenes/rojo.png");
+        OType1 = loadImage("/imagenes/cow1.png");
+        OType2 = loadImage("/imagenes/cow2.png");
         SPType1 = loadImage("/imagenes/servicePointGreen.png");
         SPType2 = loadImage("/imagenes/servicePointYellow.png");
         SPType3 = loadImage("/imagenes/servicePointRed.png");
@@ -126,19 +128,16 @@ public class SimulationCore extends PApplet {
         ;
 
         // group number 2, contains a radiobutton
-        Group g2 = cp5.addGroup("myGroup2")
+        Group g2 = cp5.addGroup("Obstaculos")
                 .setBackgroundColor(color(0, 64))
-                .setBackgroundHeight(150);
+                .setBackgroundHeight(95);
 
         cp5.addRadioButton("radio")
                 .setPosition(10, 20)
                 .setItemWidth(20)
                 .setItemHeight(20)
-                .addItem("black", 0)
-                .addItem("red", 1)
-                .addItem("green", 2)
-                .addItem("blue", 3)
-                .addItem("grey", 4)
+                .addItem("Tipo1", 0)
+                .addItem("Tipo2", 1)
                 .setColorLabel(color(255))
                 .activate(2)
                 .moveTo(g2);
@@ -226,39 +225,27 @@ public class SimulationCore extends PApplet {
 
     public void Iniciar(int theValue) {
         setUpEnviroment();
-        pause = false;
+        pause = false;        
     }
 
     public void Detener(int theValue) {
         BusinessSimulation.getInstance().reset();
         pause = true;
+        flag = false;
     }
 
     public void Defecto(int theValue) {
         setUpEnviroment();
+        flag = true;
     }
 
     public void radio(int theC) {
         switch (theC) {
             case (0):
-                c = color(0, 200);
-                println("a radio Button event: " + c);
+                TYPE_OBSTRUCTION = 1;
                 break;
             case (1):
-                c = color(255, 0, 0, 200);
-                println("a radio Button event: " + c);
-                break;
-            case (2):
-                c = color(0, 200, 140, 200);
-                println("a radio Button event: " + c);
-                break;
-            case (3):
-                c = color(0, 128, 255, 200);
-                println("a radio Button event: " + c);
-                break;
-            case (4):
-                c = color(50, 128);
-                println("a radio Button event: " + c);
+                TYPE_OBSTRUCTION = 2;
                 break;
         }
     }
@@ -326,10 +313,10 @@ public class SimulationCore extends PApplet {
         for (Obstruction u : BusinessSimulation.getInstance().getObstructions()) {
             switch (u.getType()) {
                 case 1:
-                    TYPE_OBSTRUCTION = "tipo1";
+                    TYPE_OBSTRUCTION = 1;
                     break;
                 case 2:
-                    TYPE_OBSTRUCTION = "tipo2";
+                    TYPE_OBSTRUCTION = 2;
                     break;
             }
             loadObstructionGraphic((u.getPosX() - 1) * ModuleMappedWidth + PanelWidth, (u.getPosY() - 1) * ModuleMappedHeight);
@@ -339,10 +326,10 @@ public class SimulationCore extends PApplet {
 
     public void loadObstructionGraphic(int coordX, int coordY) {
         switch (TYPE_OBSTRUCTION) {
-            case "tipo1":
+            case 1:
                 image(OType1, coordX, coordY, 40, 40);
                 break;
-            case "tipo2":
+            case 2:
                 image(OType2, coordX, coordY, 40, 40);
                 break;
         }
@@ -388,5 +375,11 @@ public class SimulationCore extends PApplet {
         BusinessSimulation.getInstance().newServicePoint(2, 21, 2, 1);
         BusinessSimulation.getInstance().newServicePoint(8, 18, 5, 1);
         BusinessSimulation.getInstance().newServicePoint(7, 7, 10, 1);
+    }
+
+    public void mouseClicked() {
+        if (mouseButton == RIGHT) {
+            BusinessSimulation.getInstance().newObstruction(((mouseX - PanelWidth) / ModuleMappedWidth) + 3, (mouseY / ModuleMappedHeight) + 1, TYPE_OBSTRUCTION, 1);
+        }
     }
 }
