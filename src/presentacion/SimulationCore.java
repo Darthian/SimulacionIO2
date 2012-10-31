@@ -235,7 +235,7 @@ public class SimulationCore extends PApplet {
     }
 
     public void Detener(int theValue) {
-        BusinessSimulation.getInstance().reset();
+        //BusinessSimulation.getInstance().reset();
         pause = true;
     }
 

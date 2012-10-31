@@ -127,7 +127,7 @@ public class BusinessSimulation {
 
     public void newServicePoint(int packsInStack, int newPosX, int newPointY, int newType) {
         ServicePoint sp = FactoryServicePoint.createServicePoint(packsInStack, newPosX, newPointY, newType);
-        System.out.println(sp.getPacksInStack()+" "+sp.getPosX()+""+sp.getPosY()+""+sp.getType());
+        System.out.println(sp.getPacksInStack() + " " + sp.getPosX() + " " + sp.getPosY() + " " + sp.getType());
         servicePoints.add(sp);
     }
 
@@ -149,6 +149,7 @@ public class BusinessSimulation {
     //Create new enemy in coordinates newPosX newPosY and newType type if available position and specifying the round
     public boolean newTransport(int newPosX, int newPosY, int newRound, int newType, int currentServicePoint) {
         if (transportMap[newPosY][newPosX] == null && obstructionMap[newPosY][newPosX] == null) {
+            System.out.println(servicePoints.get(currentServicePoint).getPosX());
             Transport newTransport = FactoryTransport.createTransport(newPosX, newPosY, newRound, newType, obstructionMap, servicePoints.get(currentServicePoint).getPosX(), servicePoints.get(currentServicePoint).getPosY());
             transports.add(newTransport);
             setTransportMap();
@@ -172,6 +173,7 @@ public class BusinessSimulation {
     //Create enemies for actual round
     private void createTransport(int currentServicePoint) {
         if (!transportType.isEmpty()) {
+            System.out.println(transportType.get(0).toString());
             if (newTransport(23, 0, round, Integer.parseInt(transportType.get(0).toString()), currentServicePoint)) {
                 transportType.remove(0);
             }
