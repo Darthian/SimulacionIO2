@@ -49,10 +49,13 @@ public class SimulationCore extends PApplet {
         changeIcon();
         changePointer();
         buttonsCreate();
-
-        BusinessSimulation.getInstance().newServicePoint(3, 5, 3);
-        BusinessSimulation.getInstance().newServicePoint(9, 10, 3);
-        BusinessSimulation.getInstance().newServicePoint(17, 17, 15);
+        //orden de los parametros: PacksInStock, posX, posY, Type
+        BusinessSimulation.getInstance().newServicePoint(3, 5, 3, 1);
+        BusinessSimulation.getInstance().newServicePoint(9, 15, 7, 1);
+        BusinessSimulation.getInstance().newServicePoint(8, 17, 15, 1);
+        BusinessSimulation.getInstance().newServicePoint(2, 21, 2, 1);
+        BusinessSimulation.getInstance().newServicePoint(8, 3, 15, 1);
+        BusinessSimulation.getInstance().newServicePoint(7, 7, 10, 1);
     }
 
     public void draw() {
@@ -60,18 +63,18 @@ public class SimulationCore extends PApplet {
         initMap();
         fill(c);
 
-        float s1 = cp5.getController("hello").getValue();
-        ellipse(850, 300, s1, s1);
-        text("Este es el simulador de envío", 500, 200, 500, 500);
+        //float s1 = cp5.getController("hello").getValue();
+        //ellipse(850, 300, s1, s1);
+        //text("Este es el simulador de envío", 500, 200, 500, 500);
 
-        float s2 = cp5.getController("world").getValue();
-        ellipse(450, 300, s2, s2);
+        //float s2 = cp5.getController("world").getValue();
+        //ellipse(450, 300, s2, s2);
 
         //El parametro que recibe nextStep indica el punto de servicio al que se hace referencia
-        if (pause == false && BusinessSimulation.getInstance().nextStep(0)) {
+        if (pause == false && BusinessSimulation.getInstance().nextStep(1)) {
             drawTransport();
         }
-        //drawServicePoint();
+        drawServicePoint();
     }
 
     void buttonsCreate() {
@@ -302,23 +305,23 @@ public class SimulationCore extends PApplet {
                     TYPE_TRANSPORT = "tipo4";
                     break;
             }
-            loadTransportGraphic(u.getPosX(), u.getPosY());
+            loadTransportGraphic((u.getPosX() - 1) * ModuleMappedWidth + PanelWidth, (u.getPosY() - 1) * ModuleMappedHeight);
         }
     }
 
     public void loadTransportGraphic(int coordX, int coordY) {
         switch (TYPE_TRANSPORT) {
             case "tipo1":
-                image(TType1, coordX, coordY, 45, 45);
+                image(TType1, coordX, coordY, 40, 40);
                 break;
             case "tipo2":
-                image(TType2, coordX, coordY, 45, 45);
+                image(TType2, coordX, coordY, 40, 40);
                 break;
             case "tipo3":
-                image(TType3, coordX, coordY, 45, 45);
+                image(TType3, coordX, coordY, 40, 40);
                 break;
             case "tipo4":
-                image(TType4, coordX, coordY, 45, 45);
+                image(TType4, coordX, coordY, 40, 40);
                 break;
         }
     }
@@ -333,7 +336,7 @@ public class SimulationCore extends PApplet {
                     TYPE_OBSTRUCTION = "tipo2";
                     break;
             }
-            loadObstructionGraphic(u.getPosX(), u.getPosY());
+            loadObstructionGraphic((u.getPosX() - 1) * ModuleMappedWidth + PanelWidth, (u.getPosY() - 1) * ModuleMappedHeight);
         }
 
     }
@@ -341,16 +344,16 @@ public class SimulationCore extends PApplet {
     public void loadObstructionGraphic(int coordX, int coordY) {
         switch (TYPE_OBSTRUCTION) {
             case "tipo1":
-                image(OType1, coordX, coordY, 45, 45);
+                image(OType1, coordX, coordY, 40, 40);
                 break;
             case "tipo2":
-                image(OType2, coordX, coordY, 45, 45);
+                image(OType2, coordX, coordY, 40, 40);
                 break;
         }
     }
 
     public void drawServicePoint() {
-        for (ServicePoint u : BusinessSimulation.getInstance().getServicePoint()) {
+        for (ServicePoint u : BusinessSimulation.getInstance().getServicePoints()) {
             switch (u.getType()) {
                 case 1:
                     TYPE_SERVICEPOINT = "tipo1";
@@ -362,7 +365,7 @@ public class SimulationCore extends PApplet {
                     TYPE_SERVICEPOINT = "tipo3";
                     break;
             }
-            loadTransportGraphic(u.getPosX(), u.getPosY());
+            loadServicePointGraphic((u.getPosX() - 1) * ModuleMappedWidth + PanelWidth, (u.getPosY() - 1) * ModuleMappedHeight);
         }
 
     }
@@ -370,13 +373,13 @@ public class SimulationCore extends PApplet {
     public void loadServicePointGraphic(int coordX, int coordY) {
         switch (TYPE_SERVICEPOINT) {
             case "tipo1":
-                image(SPType1, coordX, coordY, 45, 45);
+                image(SPType1, coordX, coordY, 40, 40);
                 break;
             case "tipo2":
-                image(SPType2, coordX, coordY, 45, 45);
+                image(SPType2, coordX, coordY, 40, 40);
                 break;
             case "tipo3":
-                image(SPType3, coordX, coordY, 45, 45);
+                image(SPType3, coordX, coordY, 40, 40);
                 break;
         }
     }

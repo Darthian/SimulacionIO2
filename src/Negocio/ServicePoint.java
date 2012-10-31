@@ -12,10 +12,11 @@ public class ServicePoint {
     }
 
     //Constructor 2
-    public ServicePoint(int newPacksInStack, int newX, int newY) {
+    public ServicePoint(int newPacksInStack, int newX, int newY,int newType) {
         packsInStack = newPacksInStack;
         posX = newX;
         posY = newY;
+        type = newType;
     }
 
     public int getPacksInStack() {

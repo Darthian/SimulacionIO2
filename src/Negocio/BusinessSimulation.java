@@ -8,7 +8,7 @@ public class BusinessSimulation {
     private Transport transportMap[][];
     private ArrayList<Obstruction> obstructions;
     private ArrayList<Transport> transports;
-    private ArrayList<ServicePoint> servicePoint;
+    private ArrayList<ServicePoint> servicePoints;
     private int round;
     private ArrayList transportType;
     private static BusinessSimulation instance;
@@ -20,7 +20,7 @@ public class BusinessSimulation {
         transportMap = new Transport[18][24];
         obstructions = new ArrayList();
         transports = new ArrayList();
-        servicePoint = new ArrayList();
+        servicePoints = new ArrayList();
         round = 0;
         points = 0;
         transportType = new ArrayList();
@@ -46,8 +46,8 @@ public class BusinessSimulation {
     }
 
     //Return tower from actual game instance
-    public ArrayList<ServicePoint> getServicePoint() {
-        return servicePoint;
+    public ArrayList<ServicePoint> getServicePoints() {
+        return servicePoints;
     }
 
     //Set defenses as newDefenses
@@ -125,19 +125,20 @@ public class BusinessSimulation {
         return find;
     }
 
-    public void newServicePoint(int packsInStack,int newPosX,int newPointY){
-        ServicePoint sp = FactoryServicePoint.createServicePoint(packsInStack, newPosX, newPointY);
-        servicePoint.add(sp);
+    public void newServicePoint(int packsInStack, int newPosX, int newPointY, int newType) {
+        ServicePoint sp = FactoryServicePoint.createServicePoint(packsInStack, newPosX, newPointY, newType);
+        System.out.println(sp.getPacksInStack()+" "+sp.getPosX()+""+sp.getPosY()+""+sp.getType());
+        servicePoints.add(sp);
     }
-            
+
     //Create new defense in coordinates newPosX newPosY and newType type if available position
     public boolean newObstruction(int newPosX, int newPosY, int newType, int currentServicePoint) {
-        if (validateNewServicePointPosition(newPosX, newPosY, servicePoint.get(currentServicePoint).getPosX(), servicePoint.get(currentServicePoint).getPosY())) {
+        if (validateNewServicePointPosition(newPosX, newPosY, servicePoints.get(currentServicePoint).getPosX(), servicePoints.get(currentServicePoint).getPosY())) {
             Obstruction newObstruction = FactoryObstruction.createDefense(newPosX, newPosY);
             obstructions.add(newObstruction);
             setObstructionsMap();
             for (int i = 0; i < transports.size(); i++) {
-                transports.get(i).setRoad(obstructionMap, servicePoint.get(currentServicePoint).getPosX(), servicePoint.get(currentServicePoint).getPosY());
+                transports.get(i).setRoad(obstructionMap, servicePoints.get(currentServicePoint).getPosX(), servicePoints.get(currentServicePoint).getPosY());
             }
             return true;
         } else {
@@ -148,7 +149,7 @@ public class BusinessSimulation {
     //Create new enemy in coordinates newPosX newPosY and newType type if available position and specifying the round
     public boolean newTransport(int newPosX, int newPosY, int newRound, int newType, int currentServicePoint) {
         if (transportMap[newPosY][newPosX] == null && obstructionMap[newPosY][newPosX] == null) {
-            Transport newTransport = FactoryTransport.createTransport(newPosX, newPosY, newRound, newType, obstructionMap, servicePoint.get(currentServicePoint).getPosX(), servicePoint.get(currentServicePoint).getPosY());
+            Transport newTransport = FactoryTransport.createTransport(newPosX, newPosY, newRound, newType, obstructionMap, servicePoints.get(currentServicePoint).getPosX(), servicePoints.get(currentServicePoint).getPosY());
             transports.add(newTransport);
             setTransportMap();
             return true;
@@ -188,8 +189,8 @@ public class BusinessSimulation {
     //Attack tower
     private void leavePacks(int currentServicePoint) {
         for (int i = 0; i < transports.size(); i++) {
-            if (transports.get(i).reachTower(servicePoint.get(currentServicePoint))) {
-                servicePoint.get(currentServicePoint).setPacksInStack(transports.get(i).getCapacity());
+            if (transports.get(i).reachTower(servicePoints.get(currentServicePoint))) {
+                servicePoints.get(currentServicePoint).setPacksInStack(transports.get(i).getCapacity());
                 transports.remove(i);
                 i--;
             }
@@ -198,7 +199,7 @@ public class BusinessSimulation {
 
     //Validate tower life
     private boolean validateServicePoint(int currentServicePoint) {
-        if (servicePoint.get(currentServicePoint).getPacksInStack() <= 0) {
+        if (servicePoints.get(currentServicePoint).getPacksInStack() <= 0) {
             return true;
         }
         return false;
@@ -222,7 +223,7 @@ public class BusinessSimulation {
 
     public void updateRoad(int currentServicePoint) {
         for (int i = 0; i < transports.size(); i++) {
-            transports.get(i).setRoad(obstructionMap, servicePoint.get(currentServicePoint).getPosX(), servicePoint.get(currentServicePoint).getPosY());
+            transports.get(i).setRoad(obstructionMap, servicePoints.get(currentServicePoint).getPosX(), servicePoints.get(currentServicePoint).getPosY());
         }
     }
 
