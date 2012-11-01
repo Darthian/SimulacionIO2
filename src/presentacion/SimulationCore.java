@@ -225,7 +225,7 @@ public class SimulationCore extends PApplet {
 
     public void Iniciar(int theValue) {
         setUpEnviroment();
-        pause = false;        
+        pause = false;
     }
 
     public void Detener(int theValue) {
@@ -288,7 +288,7 @@ public class SimulationCore extends PApplet {
                     TYPE_TRANSPORT = "tipo4";
                     break;
             }
-            loadTransportGraphic((u.getPosX() - 1) * ModuleMappedWidth + PanelWidth, (u.getPosY() - 1) * ModuleMappedHeight);
+            loadTransportGraphic((u.getPosX()) * ModuleMappedWidth + PanelWidth, (u.getPosY()) * ModuleMappedHeight);
         }
     }
 
@@ -319,9 +319,8 @@ public class SimulationCore extends PApplet {
                     TYPE_OBSTRUCTION = 2;
                     break;
             }
-            loadObstructionGraphic((u.getPosX() - 1) * ModuleMappedWidth + PanelWidth, (u.getPosY() - 1) * ModuleMappedHeight);
+            loadObstructionGraphic(((u.getPosX()) * ModuleMappedWidth) + PanelWidth, (u.getPosY()) * ModuleMappedHeight);
         }
-
     }
 
     public void loadObstructionGraphic(int coordX, int coordY) {
@@ -348,7 +347,7 @@ public class SimulationCore extends PApplet {
                     TYPE_SERVICEPOINT = "tipo3";
                     break;
             }
-            loadServicePointGraphic((u.getPosX() - 1) * ModuleMappedWidth + PanelWidth, (u.getPosY() - 1) * ModuleMappedHeight);
+            loadServicePointGraphic((u.getPosX()) * ModuleMappedWidth + PanelWidth, (u.getPosY()) * ModuleMappedHeight);
         }
 
     }
@@ -379,7 +378,12 @@ public class SimulationCore extends PApplet {
 
     public void mouseClicked() {
         if (mouseButton == RIGHT) {
-            BusinessSimulation.getInstance().newObstruction(((mouseX - PanelWidth) / ModuleMappedWidth) + 3, (mouseY / ModuleMappedHeight) + 1, TYPE_OBSTRUCTION, 1);
+            if (((mouseX - PanelWidth) / ModuleMappedWidth) >= 0 && ((mouseX - PanelWidth) / ModuleMappedWidth) <= 23
+                    && (mouseY / ModuleMappedHeight) >= 0 && (mouseY / ModuleMappedHeight) <= 17) {
+                BusinessSimulation.getInstance().newObstruction(((mouseX - PanelWidth) / ModuleMappedWidth),
+                        (mouseY / ModuleMappedHeight), TYPE_OBSTRUCTION, 1);
+            }
+
         }
     }
 }
