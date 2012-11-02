@@ -27,11 +27,11 @@ public class SimulationCore extends PApplet {
     private String TYPE_TRANSPORT;
     private int TYPE_OBSTRUCTION;
     private String TYPE_SERVICEPOINT;
-    private int WindowWidth = 1200;
-    private int WindowHeight = 630;
+    private int WindowWidth = 1280;
+    private int WindowHeight = 650;
     private int ModuleMappedWidth = 42;
     private int ModuleMappedHeight = 35;
-    private int PanelWidth = 168;
+    private int PanelWidth = 175;
     private int PanelHeight = 630;
     private int ClearanceWidth = 24;//La holgura surge del numero de columnas
     private int ClearanceHeight = 18;//La holgura surge del numero de filas
@@ -74,12 +74,12 @@ public class SimulationCore extends PApplet {
     }
 
     void buttonsCreate() {
-        cp5.addButton("Iniciar")
+        cp5.addButton("Enviar")
                 .setValue(0)
-                .setPosition(10, 550)
-                .setSize(100, 19);
+                .setPosition(60, 570)
+                .setSize(44, 19);
 
-        cp5.addButton("Detener")
+/*        cp5.addButton("Detener")
                 .setValue(100)
                 .setPosition(10, 570)
                 .setSize(100, 19);
@@ -87,7 +87,7 @@ public class SimulationCore extends PApplet {
         cp5.addButton("Defecto")
                 .setPosition(10, 590)
                 .setSize(100, 19)
-                .setValue(0);
+                .setValue(0);*/
     }
 
     void changeIcon() {
@@ -115,22 +115,99 @@ public class SimulationCore extends PApplet {
 
     void optionCreate() {
         // group number 1, contains 2 bangs
-        Group g1 = cp5.addGroup("myGroup1")
+        Group g1 = cp5.addGroup("Detalles Mercancia")
                 .setBackgroundColor(color(0, 64))
-                .setBackgroundHeight(150);
+                .setBackgroundHeight(580);
 
 
-        cp5.addBang("bang")
+        cp5.addTextfield("Nombre Mercancia")
                 .setPosition(10, 20)
-                .setSize(100, 100)
+                .setSize(120, 25)
                 .moveTo(g1)
-                .plugTo(this, "shuffle");
-        ;
+                ;
+        cp5.addCheckBox("Perecedero")        
+                .setPosition(10, 65)
+                .setItemWidth(20)
+                .setItemHeight(20)                
+                .addItem("Perecedero", 0)                
+                .setColorLabel(color(255))
+                .activate(2)
+                .moveTo(g1)                
+                ;
+        cp5.addTextlabel("Dimension de la mercancia")
+                .setPosition(10, 105)
+                .setSize(120, 25)
+                .setText("DIMENSION DE LA MERCANCIA")
+                .moveTo(g1);
+        cp5.addSlider("Ancho")
+                .setPosition(10, 125)
+                .setSize(20, 20)
+                .setRange(0, 100)
+                .setValue(100)
+                .moveTo(g1);
 
-        // group number 2, contains a radiobutton
+        cp5.addSlider("Largo")
+                .setPosition(60, 125)
+                .setSize(20, 20)
+                .setRange(0, 100)
+                .setValue(100)
+                .moveTo(g1);
+
+        cp5.addSlider("Alto")
+                .setPosition(110, 125)
+                .setSize(20, 20)
+                .setRange(0, 100)
+                .setValue(100)
+                .moveTo(g1);
+        cp5.addSlider("Cantidad a enviar")
+                .setPosition(10, 175)
+                .setSize(50, 20)
+                .setRange(1, 40)
+                .setValue(100)
+                .moveTo(g1);  
+        
+        cp5.addTextlabel("Punto de Origen label")
+                .setPosition(10, 210)
+                .setSize(120, 25)
+                .setText("ESCOJA EL PUNTO DE ORIGEN")
+                .moveTo(g1);
+        cp5.addRadioButton("Punto de Origen")
+                .setPosition(10, 225)
+                .setItemWidth(20)
+                .setItemHeight(20)
+                .addItem("Punto de Servicio 1", 0)
+                .addItem("Punto de Servicio 2", 1)
+                .addItem("Punto de Servicio 3", 2)
+                .addItem("Punto de Servicio 4", 3)
+                .addItem("Punto de Servicio 5", 4)
+                .addItem("Punto de Servicio 6", 5)               
+                .setColorLabel(color(255))
+                .activate(2)
+                .moveTo(g1);
+        cp5.addTextlabel("Punto de Destino label")
+                .setPosition(8, 370)
+                .setSize(110, 25)
+                .setText("ESCOJA EL PUNTO DE DESTINO")
+                .moveTo(g1);
+        cp5.addRadioButton("Punto de Destino")
+                .setPosition(10, 385)
+                .setItemWidth(20)
+                .setItemHeight(20)
+                .addItem("P. de Servicio 1", 0)
+                .addItem("P. de Servicio 2", 1)
+                .addItem("P. de Servicio 3", 2)
+                .addItem("P. de Servicio 4", 3)
+                .addItem("P. de Servicio 5", 4)
+                .addItem("P. de Servicio 6", 5)               
+                .setColorLabel(color(255))
+                .activate(3)
+                .moveTo(g1);
+
+        
+/*        // group number 2, contains a radiobutton
         Group g2 = cp5.addGroup("Obstaculos")
                 .setBackgroundColor(color(0, 64))
-                .setBackgroundHeight(95);
+                .setBackgroundHeight(300);
 
         cp5.addRadioButton("radio")
                 .setPosition(10, 20)
@@ -165,15 +242,15 @@ public class SimulationCore extends PApplet {
                 .setRange(100, 500)
                 .setValue(200)
                 .moveTo(g3);
-
+*/
         // create a new accordion
         // add g1, g2, and g3 to the accordion.
         accordion = cp5.addAccordion("acc")
                 .setPosition(5, 20)
-                .setWidth(150)
-                .addItem(g1)
-                .addItem(g2)
-                .addItem(g3);
+                .setWidth(160)
+                .addItem(g1);
+//                .addItem(g2)
+//                .addItem(g3);
 
         cp5.mapKeyFor(new ControlKey() {
             public void keyEvent() {
@@ -208,7 +285,7 @@ public class SimulationCore extends PApplet {
         }, '4');
         cp5.mapKeyFor(new ControlKey() {
             public void keyEvent() {
-                cp5.remove("myGroup1");
+                cp5.remove("Detalles Mercancia");
             }
         }, '0');
 
