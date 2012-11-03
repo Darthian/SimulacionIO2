@@ -1,11 +1,11 @@
 package presentacion;
 
-import Negocio.BusinessSimulation;
-import Negocio.Obstruction;
-import Negocio.ServicePoint;
-import Negocio.Transport;
+import Negocio.*;
 import processing.core.PApplet;
 import controlP5.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import processing.core.PImage;
 
@@ -27,16 +27,19 @@ public class SimulationCore extends PApplet {
     private String TYPE_TRANSPORT;
     private int TYPE_OBSTRUCTION;
     private String TYPE_SERVICEPOINT;
-    private int WindowWidth = 1280;
-    private int WindowHeight = 650;
+    private int WindowWidth = 1200;
+    private int WindowHeight = 680;
     private int ModuleMappedWidth = 42;
-    private int ModuleMappedHeight = 35;
+    private int ModuleMappedHeight = 36;
     private int PanelWidth = 175;
-    private int PanelHeight = 630;
+    private int PanelHeight = 680;
     private int ClearanceWidth = 24;//La holgura surge del numero de columnas
-    private int ClearanceHeight = 18;//La holgura surge del numero de filas
+    private int ClearanceHeight = 19;//La holgura surge del numero de filas
     private boolean pause = true;
     private boolean flag = true;
+    private List tiempos=new ArrayList();
+    ListBox I;
+    private ProbNacimientos naci=new ProbNacimientos();
 
     public void setup() {
         size(WindowWidth, WindowHeight);
@@ -76,18 +79,18 @@ public class SimulationCore extends PApplet {
     void buttonsCreate() {
         cp5.addButton("Enviar")
                 .setValue(0)
-                .setPosition(60, 570)
-                .setSize(44, 19);
+                .setPosition(60, 610)
+                .setSize(50, 19);
 
-/*        cp5.addButton("Detener")
+        cp5.addButton("Detener")
                 .setValue(100)
-                .setPosition(10, 570)
-                .setSize(100, 19);
+                .setPosition(60, 630)
+                .setSize(50, 19);
 
         cp5.addButton("Defecto")
-                .setPosition(10, 590)
-                .setSize(100, 19)
-                .setValue(0);*/
+                .setPosition(60, 650)
+                .setSize(50, 19)
+                .setValue(0);
     }
 
     void changeIcon() {
@@ -118,8 +121,10 @@ public class SimulationCore extends PApplet {
         Group g1 = cp5.addGroup("Detalles Mercancia")
                 .setBackgroundColor(color(0, 64))
                 .setBackgroundHeight(580);
-
-
+        for(int i=0;i<6;i++){
+                //tiempos.add();
+            tiempos.add(String.valueOf((i+1)*4)+" horas");
+        }
         cp5.addTextfield("Nombre Mercancia")
                 .setPosition(10, 20)
                 .setSize(120, 25)
@@ -162,48 +167,47 @@ public class SimulationCore extends PApplet {
         cp5.addSlider("Cantidad a enviar")
                 .setPosition(10, 175)
                 .setSize(50, 20)
-                .setRange(1, 40)
+                .setRange(1, 60)
                 .setValue(100)
                 .moveTo(g1);  
         
-        cp5.addTextlabel("Punto de Origen label")
-                .setPosition(10, 210)
-                .setSize(120, 25)
-                .setText("ESCOJA EL PUNTO DE ORIGEN")
+        cp5.addTextarea("Punto de Origen label")
+                .setPosition(20, 210)
+                .setSize(160, 65)
+                .setText("\t\t\t\tSELECCIONE:\nEL PUNTO DE ORIGEN\nMARCADO POR P.S.O Y\nEL PUNTO DE DESTINO\nMARCADO POR P.S.D ")
                 .moveTo(g1);
         cp5.addRadioButton("Punto de Origen")
-                .setPosition(10, 225)
+                .setPosition(10, 265)
                 .setItemWidth(20)
                 .setItemHeight(20)
-                .addItem("Punto de Servicio 1", 0)
-                .addItem("Punto de Servicio 2", 1)
-                .addItem("Punto de Servicio 3", 2)
-                .addItem("Punto de Servicio 4", 3)
-                .addItem("Punto de Servicio 5", 4)
-                .addItem("Punto de Servicio 6", 5)               
+                .addItem("P.S.O 1", 0)
+                .addItem("P.S.O 2", 1)
+                .addItem("P.S.O 3", 2)
+                .addItem("P.S.O 4", 3)
+                .addItem("P.S.O 5", 4)
+                .addItem("P.S.O 6", 5)               
                 .setColorLabel(color(255))
                 .activate(2)
                 .moveTo(g1);
-        cp5.addTextlabel("Punto de Destino label")
-                .setPosition(8, 370)
-                .setSize(110, 25)
-                .setText("ESCOJA EL PUNTO DE DESTINO")
-                .moveTo(g1);
         cp5.addRadioButton("Punto de Destino")
-                .setPosition(10, 385)
+                .setPosition(80, 265)
                 .setItemWidth(20)
                 .setItemHeight(20)
-                .addItem("P. de Servicio 1", 0)
-                .addItem("P. de Servicio 2", 1)
-                .addItem("P. de Servicio 3", 2)
-                .addItem("P. de Servicio 4", 3)
-                .addItem("P. de Servicio 5", 4)
-                .addItem("P. de Servicio 6", 5)               
+                .addItem("P.S.D 1", 0)
+                .addItem("P.S.D 2", 1)
+                .addItem("P.S.D 3", 2)
+                .addItem("P.S.D 4", 3)
+                .addItem("P.S.D 5", 4)
+                .addItem("P.S.D 6", 5)               
                 .setColorLabel(color(255))
                 .activate(3)
                 .moveTo(g1);
-
-        
+        cp5.addListBox("Tiempo Envio")
+                .setPosition(25, 420)
+                .setId(6)
+                .addItems(tiempos)
+                .moveTo(g1);
+              
 /*        // group number 2, contains a radiobutton
         Group g2 = cp5.addGroup("Obstaculos")
                 .setBackgroundColor(color(0, 64))
@@ -300,9 +304,15 @@ public class SimulationCore extends PApplet {
         // accordion.setCollapseMode(Accordion.SINGLE);
     }
 
-    public void Iniciar(int theValue) {
+    public void Enviar(int theValue) {
         setUpEnviroment();
         pause = false;
+        int s1 = (int) cp5.getController("Cantidad a enviar").getValue();            
+        cp5.addTextarea("Probabilidad")
+                .setPosition(20, 545)
+                .setSize(160, 65)
+                .setText(naci.probPaquetes(5,s1))
+                ;                        
     }
 
     public void Detener(int theValue) {
@@ -313,7 +323,7 @@ public class SimulationCore extends PApplet {
 
     public void Defecto(int theValue) {
         setUpEnviroment();
-        flag = true;
+        flag = true;        
     }
 
     public void radio(int theC) {
