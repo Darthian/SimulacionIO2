@@ -17,7 +17,9 @@ public class ProbNacimientos {
             return String.valueOf(result)+"%";
         }
         if(Num_Paquetes<20){      
-        return prob_num_paquetes(time,Num_Paquetes);    
+        int j=20-Num_Paquetes;    
+        String lk="PARA COMPLETAR UN ENVIO DEBE ESPERAR HASTA QUE LLEGUEN "+String.valueOf(j)+" PAQUETES MAS. SELECIONE EL TIEMPO QUE DESEA, EN QUE LLEGUEN ESTOS "+String.valueOf(j)+" PAQUETES :";
+        return lk;    
         }
         while(Num_Paquetes>20){
             Num_Paquetes=Num_Paquetes-20;
@@ -25,10 +27,10 @@ public class ProbNacimientos {
             contador=contador+1;
             }        
         if(k<20){      
-            return "LOS PRIMEROS "+String.valueOf(contador*20)+" PAQUETES TIENEN LA PROBABILIDAD DEL 100% Y LOS OTROS "+String.valueOf(k)+ " PAQUETES TIENEN LA PROBABILIDAD DE "+prob_num_paquetes(time,k);    
+            return "LOS PRIMEROS "+String.valueOf(contador*20)+" PAQUETES TIENEN LA PROBABILIDAD DEL 100%. QUEDAN "+String.valueOf(k)+ " PAQUETES POR ENVIAR. PARA COMPLETAR OTRO ENVIO DEBE ESPERAR HASTA QUE LLEGUEN "+String.valueOf(20-k)+" PAQUETES. SELECIONE EL TIEMPO QUE DESEA, EN QUE LLEGUEN ESTOS "+String.valueOf(20-k)+" PAQUETES :";
         }
           
-        return "100%";
+        return "UN ENVIO SE GENERA CUANDO SE COMPLETAN 20 PAQUETES";
     }
 
     public double factorial_numero(int valor_numero){
@@ -40,8 +42,7 @@ public class ProbNacimientos {
 
         return resultado; //Devuelve un resultado tipo double
     } 
-    public String prob_num_paquetes(double time,int Num_Paquetes){
-            
+    public String prob_num_paquetes(int time,int Num_Paquetes){    
             double lambda=0.125;//Equivale a 1/8
             double lt=Math.pow((lambda*time*60),Num_Paquetes);
             System.out.println("Lambda *tiempo ^ Numero paquetes= ");
@@ -60,7 +61,7 @@ public class ProbNacimientos {
             System.out.println(k);
             System.out.println("jajajajajajaj");
             String porcen=String.valueOf(k*100)+"%";
-            return porcen;
+            return "\nLA PROBABILIDAD DE QUE LLEGUEN "+String.valueOf(Num_Paquetes)+" PAQUETES EN "+String.valueOf(time)+" HORAS ES: "+porcen;
     
     }
  }
