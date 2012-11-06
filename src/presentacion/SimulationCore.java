@@ -445,7 +445,7 @@ public class SimulationCore extends PApplet {
         BusinessSimulation.getInstance().newServicePoint(3, 5, 3, 1);
         BusinessSimulation.getInstance().newServicePoint(9, 1, 17, 1);
         BusinessSimulation.getInstance().newServicePoint(8, 17, 15, 1);
-        BusinessSimulation.getInstance().newServicePoint(2, 21, 2, 1);
+        BusinessSimulation.getInstance().newServicePoint(2, 23, 0, 1);
         BusinessSimulation.getInstance().newServicePoint(8, 18, 5, 1);
         BusinessSimulation.getInstance().newServicePoint(7, 7, 10, 1);
     }
