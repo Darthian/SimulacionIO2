@@ -38,6 +38,7 @@ public class SimulationCore extends PApplet {
     private boolean pause = true;
     private boolean flag = true;
     private ProbNacimientos naci=new ProbNacimientos();
+    private int k=0;
 
     public void setup() {
         size(WindowWidth, WindowHeight);
@@ -158,7 +159,6 @@ public class SimulationCore extends PApplet {
                 .setValue (100)
                 .setDecimalPrecision(0)
                 .moveTo(g1);
-        
         cp5.addTextarea("Punto de Origen label")
                 .setPosition(20, 185)
                 .setSize(160, 65)
@@ -190,14 +190,12 @@ public class SimulationCore extends PApplet {
                 .setColorLabel(color(255))
                 .activate(3)
                 .moveTo(g1);
-              
         accordion = cp5.addAccordion("acc")
                 .setPosition(5, 20)
                 .setWidth(150)
                 .addItem(g1);
 //                .addItem(g2)
 //                .addItem(g3);
-
         cp5.mapKeyFor(new ControlKey() {
             public void keyEvent() {
                 accordion.open(0, 1, 2);
@@ -250,17 +248,18 @@ public class SimulationCore extends PApplet {
         setUpEnviroment();
         pause = false;
         int s1 = (int) cp5.getController("CANTIDAD A ENVIAR").getValue();     
-        int paq=20-s1;        
+        int r=s1; 
+        int contador = 0, paq=20-s1;
+
+        if(s1<20){
         cp5.addTextarea("Probabilidad1")
                 .setPosition(10, 400)
                 .setSize(150, 65)
-                .setText(naci.probPaquetes(5,s1));
-      if(s1<20){
-
+                .setText("PARA COMPLETAR UN ENVIO DEBE ESPERAR HASTA QUE LLEGUEN "+String.valueOf(paq)+" PAQUETES MAS. SELECIONE EL TIEMPO QUE DESEA, EN QUE LLEGUEN ESTOS "+String.valueOf(paq)+" PAQUETES :");
         cp5.addSlider("   ")
                 .setPosition(20, 470)
                 .setSize(120, 20)
-                .setRange(1, 24)
+                .setRange(1,18)
                 .setValue(100)
                 .setDecimalPrecision(0)
                 .setSliderMode(Slider.FLEXIBLE);               
@@ -272,7 +271,50 @@ public class SimulationCore extends PApplet {
                 .setPosition(50, 520)
                 .setSize(50, 19)
                 .setValue(0);
-             }                              
+             }
+        if(s1>20){
+        while(s1>20){
+                s1=s1-20;
+                k=s1;
+                contador=contador+1;
+                }
+        if(k!=0&&k<20){
+            cp5.addTextarea("Probabilidad1")
+                    .setPosition(10, 400)
+                    .setSize(150, 65)
+                    .setText("LOS PRIMEROS "+String.valueOf(contador*20)+" PAQUETES SERAN ENVIADOS SATISFACTORIAMENTE. PARA LOS OTROS "+
+                    String.valueOf(k)+ " PAQUETES, SE DEBE ESPERAR HASTA QUE SE COMPLETE EL ENVIO. "
+                    + "PARA COMPLETAR EL ENVIO SE NECESITAN "+String.valueOf(20-k)+" PAQUETES MAS. SELECIONE EL TIEMPO QUE DESEA, EN QUE LLEGUEN ESTOS "+String.valueOf(20-k)+" PAQUETES :");
+            cp5.addSlider("   ")
+                    .setPosition(20, 470)
+                    .setSize(120, 20)
+                    .setRange(1, 18)
+                    .setValue(100)
+                    .setDecimalPrecision(0)
+                    .setSliderMode(Slider.FLEXIBLE);
+            
+            cp5.addTextarea("Tiempo Llegada")
+                    .setPosition(20, 490)
+                    .setSize(160, 65)
+                    .setText("TIEMPO LLEGADA DE LOS PROXIMOS "+String.valueOf(20-k)+" PAQUETES");
+            cp5.addButton("Aceptar")
+                    .setPosition(50, 520)
+                    .setSize(50, 19)
+                    .setValue(0);
+        }
+      }
+      if(s1==60||s1==40||s1==20){
+          while(s1>=20){
+                s1=s1-20;
+                k=s1;
+                contador=contador+1;
+                }
+
+          cp5.addTextarea("Probabilidad1")
+                    .setPosition(10, 400)
+                    .setSize(150, 65)
+                    .setText("LOS "+String.valueOf(r)+" PAQUETES SERAN ENVIADOS SATISFACTORIAMENTE EN "+String.valueOf(contador) +" ENVIOS.");      
+      }  
     }
 
     public void Detener(int theValue) {
@@ -285,11 +327,18 @@ public class SimulationCore extends PApplet {
         int s2 = (int) cp5.getController("   ").getValue();         
         int s1 = (int) cp5.getController("CANTIDAD A ENVIAR").getValue();
         int paq=20-s1;
+        if(paq>0){
         cp5.addTextarea("Probabilidad22")
                 .setPosition(20, 550)
                 .setSize(150, 65)
                 .setText(naci.prob_num_paquetes(s2,paq));           
-    }    
+        }else{
+        cp5.addTextarea("Probabilidad22")
+                .setPosition(20, 550)
+                .setSize(150, 65)
+                .setText(naci.prob_num_paquetes(s2,20-k));                           
+        }    
+    }
     
     public void Defecto(int theValue) {
         setUpEnviroment();
