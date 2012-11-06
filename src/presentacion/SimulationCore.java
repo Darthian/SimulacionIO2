@@ -149,7 +149,7 @@ public class SimulationCore extends PApplet {
                 .setRange(0, 100)
                 .setValue(100)
                 .moveTo(g1);
-        cp5.addNumberbox("CANTIDAD_A_ENVIAR")
+        cp5.addNumberbox("CANTIDAD A ENVIAR")
                 .setPosition(10, 145)
                 .setSize(130, 14)
                 .setRange(1, 60)
@@ -240,13 +240,6 @@ public class SimulationCore extends PApplet {
         // when in SINGLE mode, only 1 accordion  
         // group can be open at a time.  
         // accordion.setCollapseMode(Accordion.SINGLE);
-
-        cp5.addTextarea("Punto de Origen label")
-                .setPosition(20, 410)
-                .setSize(160, 65)
-                .setText("\tSeleccione el tipo de \n opstaculo: ")
-                .moveTo(g1);
-        cp5 = new ControlP5(this);
     }
 
     public void Enviar(int theValue) {
@@ -349,11 +342,6 @@ public class SimulationCore extends PApplet {
         setUpEnviroment();
         flag = true;        
     }
-
-    public void Defecto(int theValue) {
-        setUpEnviroment();
-        flag = true;
-    }   
 
     public void shuffle() {
         c = color(random(255), random(255), random(255), random(128, 255));
