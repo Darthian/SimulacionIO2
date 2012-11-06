@@ -25,7 +25,7 @@ public class SimulationCore extends PApplet {
     private PImage SPType2;
     private PImage SPType3;
     private String TYPE_TRANSPORT;
-    private int TYPE_OBSTRUCTION;
+    private int TYPE_OBSTRUCTION = 2;
     private String TYPE_SERVICEPOINT;
     private int WindowWidth = 1200;
     private int WindowHeight = 680;
@@ -85,9 +85,9 @@ public class SimulationCore extends PApplet {
     }
 
     void changeIcon() {
-        ImageIcon titlebaricon = new ImageIcon(loadBytes("/imagenes/iconClock.png"));
+        ImageIcon titlebaricon = new ImageIcon(loadBytes("/imagenes/angel-icon.png"));
         frame.setIconImage(titlebaricon.getImage());
-        frame.setTitle("TimePower");
+        frame.setTitle("HERMES");
     }
 
     void changePointer() {
@@ -115,17 +115,15 @@ public class SimulationCore extends PApplet {
         cp5.addTextfield("Nombre Mercancia")
                 .setPosition(10, 12)
                 .setSize(120, 25)
-                .moveTo(g1)
-                ;
-        cp5.addCheckBox("Perecedero")        
+                .moveTo(g1);
+        cp5.addCheckBox("Perecedero")
                 .setPosition(10, 55)
                 .setItemWidth(20)
-                .setItemHeight(20)                
-                .addItem("Perecedero", 0)                
+                .setItemHeight(20)
+                .addItem("Perecedero", 0)
                 .setColorLabel(color(255))
                 .activate(2)
-                .moveTo(g1)                
-                ;
+                .moveTo(g1);
         cp5.addTextlabel("Dimension de la mercancia")
                 .setPosition(10, 90)
                 .setSize(120, 25)
@@ -151,12 +149,12 @@ public class SimulationCore extends PApplet {
                 .setRange(0, 100)
                 .setValue(100)
                 .moveTo(g1);
-        cp5.addNumberbox ("CANTIDAD A ENVIAR")
-                .setPosition (10,145)
-                .setSize (130,14)
-                .setRange (1,60)
-                .setDirection (Controller.HORIZONTAL) // cambiar la dirección de control hacia la izquierda / derecha
-                .setValue (100)
+        cp5.addNumberbox("CANTIDAD_A_ENVIAR")
+                .setPosition(10, 145)
+                .setSize(130, 14)
+                .setRange(1, 60)
+                .setDirection(Controller.HORIZONTAL) // cambiar la dirección de control hacia la izquierda / derecha
+                .setValue(100)
                 .setDecimalPrecision(0)
                 .moveTo(g1);
         cp5.addTextarea("Punto de Origen label")
@@ -173,7 +171,7 @@ public class SimulationCore extends PApplet {
                 .addItem("P.S.O 3", 2)
                 .addItem("P.S.O 4", 3)
                 .addItem("P.S.O 5", 4)
-                .addItem("P.S.O 6", 5)               
+                .addItem("P.S.O 6", 5)
                 .setColorLabel(color(255))
                 .activate(2)
                 .moveTo(g1);
@@ -186,7 +184,7 @@ public class SimulationCore extends PApplet {
                 .addItem("P.S.D 3", 2)
                 .addItem("P.S.D 4", 3)
                 .addItem("P.S.D 5", 4)
-                .addItem("P.S.D 6", 5)               
+                .addItem("P.S.D 6", 5)
                 .setColorLabel(color(255))
                 .activate(3)
                 .moveTo(g1);
@@ -242,6 +240,13 @@ public class SimulationCore extends PApplet {
         // when in SINGLE mode, only 1 accordion  
         // group can be open at a time.  
         // accordion.setCollapseMode(Accordion.SINGLE);
+
+        cp5.addTextarea("Punto de Origen label")
+                .setPosition(20, 410)
+                .setSize(160, 65)
+                .setText("\tSeleccione el tipo de \n opstaculo: ")
+                .moveTo(g1);
+        cp5 = new ControlP5(this);
     }
 
     public void Enviar(int theValue) {
@@ -324,7 +329,7 @@ public class SimulationCore extends PApplet {
     }
 
     public void Aceptar(int theValue) {
-        int s2 = (int) cp5.getController("   ").getValue();         
+        int s2 = (int) cp5.getController("   ").getValue();
         int s1 = (int) cp5.getController("CANTIDAD A ENVIAR").getValue();
         int paq=20-s1;
         if(paq>0){
@@ -345,16 +350,10 @@ public class SimulationCore extends PApplet {
         flag = true;        
     }
 
-    public void radio(int theC) {
-        switch (theC) {
-            case (0):
-                TYPE_OBSTRUCTION = 1;
-                break;
-            case (1):
-                TYPE_OBSTRUCTION = 2;
-                break;
-        }
-    }
+    public void Defecto(int theValue) {
+        setUpEnviroment();
+        flag = true;
+    }   
 
     public void shuffle() {
         c = color(random(255), random(255), random(255), random(128, 255));
@@ -471,13 +470,13 @@ public class SimulationCore extends PApplet {
                 break;
         }
     }
-   
+
     private void setUpEnviroment() {
         //orden de los parametros: PacksInStock, posX, posY, Type
         BusinessSimulation.getInstance().newServicePoint(3, 5, 3, 1);
         BusinessSimulation.getInstance().newServicePoint(9, 1, 17, 1);
         BusinessSimulation.getInstance().newServicePoint(8, 17, 15, 1);
-        BusinessSimulation.getInstance().newServicePoint(2, 21, 2, 1);
+        BusinessSimulation.getInstance().newServicePoint(2, 23, 0, 1);
         BusinessSimulation.getInstance().newServicePoint(8, 18, 5, 1);
         BusinessSimulation.getInstance().newServicePoint(7, 7, 10, 1);
     }
