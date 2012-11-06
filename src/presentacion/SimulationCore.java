@@ -25,7 +25,7 @@ public class SimulationCore extends PApplet {
     private PImage SPType2;
     private PImage SPType3;
     private String TYPE_TRANSPORT;
-    private int TYPE_OBSTRUCTION;
+    private int TYPE_OBSTRUCTION = 2;
     private String TYPE_SERVICEPOINT;
     private int WindowWidth = 1200;
     private int WindowHeight = 680;
@@ -38,7 +38,6 @@ public class SimulationCore extends PApplet {
     private boolean pause = true;
     private boolean flag = true;
     private ProbNacimientos naci = new ProbNacimientos();
-    private RadioButton r;
 
     public void setup() {
         size(WindowWidth, WindowHeight);
@@ -250,17 +249,6 @@ public class SimulationCore extends PApplet {
                 .setText("\tSeleccione el tipo de \n opstaculo: ")
                 .moveTo(g1);
         cp5 = new ControlP5(this);
-        r = cp5.addRadioButton("radio")                
-                .setPosition(20, 470)
-                .setSize(40, 20)
-                .setColorForeground(color(120))
-                .setColorActive(color(255))
-                .setColorLabel(color(255))
-                .setItemsPerRow(1)
-                .setSpacingColumn(50)
-                .addItem("Tipo1", 1)
-                .addItem("Tipo2", 2);
-               
     }
 
     public void Enviar(int theValue) {
@@ -311,18 +299,7 @@ public class SimulationCore extends PApplet {
     public void Defecto(int theValue) {
         setUpEnviroment();
         flag = true;
-    }
-
-    public void radio(int theC) {
-        switch (theC) {
-            case (0):
-                TYPE_OBSTRUCTION = 1;
-                break;
-            case (1):
-                TYPE_OBSTRUCTION = 2;
-                break;
-        }
-    }
+    }   
 
     public void shuffle() {
         c = color(random(255), random(255), random(255), random(128, 255));
